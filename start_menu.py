@@ -30,6 +30,8 @@ play_logo_pressed = pygame.transform.scale(pygame.image.load("Assets/logo_presse
 options_logo_pressed = pygame.transform.scale(pygame.image.load("Assets/logo_pressed.png"),(175,65))
 quit_logo_pressed = pygame.transform.scale(pygame.image.load("Assets/logo_pressed.png"),(175,65))
 renard_loading = pygame.transform.scale(pygame.image.load("Assets/Renard.png"),(50,41))
+logo_game = pygame.image.load("Logo_the fox fishing.png")
+
 background = bg_menu.Background()
 
 '''def draw_text(texte, taille, couleur, surface, x, y):
@@ -107,6 +109,7 @@ def loading():
     count = 0
     clock = 0
     important = 0
+    mixer.music.set_volume(0.2)
     while running:
         ecran.fill((0, 0, 0))
         angle +=1
@@ -227,6 +230,7 @@ def main_menu():
         options_button_pressed = Button(infoObject.current_w*(3/6), infoObject.current_h*(43/54), options_logo_pressed)
         quit_button_pressed = Button(infoObject.current_w*(4/6), infoObject.current_h*(43/54), quit_logo_pressed)
 
+
         if play_button.draw("   play"):
             play_button_pressed.draw("   play")
             loading()
@@ -238,6 +242,7 @@ def main_menu():
             pygame.quit()
             sys.exit()
 
+        ecran.blit(logo_game, (infoObject.current_w * (2 / 5), infoObject.current_h * (1 / 2)))
         '''draw_text('Crazy Extreme Fishing', taille, (70, 0, 150), ecran, (size[0]/2)-230, size[1]/8)
 
         sourisx, sourisy = pygame.mouse.get_pos()
