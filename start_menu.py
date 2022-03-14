@@ -5,7 +5,7 @@ import time
 ticker = pygame.time.Clock()
 from pygame.locals import *
 from pygame import mixer
-
+import tilemap
 
 #pygame.display.set_mode((infoObject.current_w, infoObject.current_h))
 
@@ -16,21 +16,20 @@ size = (900,600)
 infoObject = pygame.display.Info()
 
 ecran = pygame.display.set_mode((0,0),pygame.FULLSCREEN)
-menu_sound = mixer.music.load("littleidea.mp3")
-button_sound = mixer.Sound("button_sound.wav")
+menu_sound = mixer.music.load("Assets/Songs/littleidea.mp3")
+button_sound = mixer.Sound("Assets/Songs/button_sound.wav")
 mixer.music.set_volume(0.7)
 mixer.music.play(-1)
 taille = pygame.font.SysFont(None, 60)
 BG = pygame.image.load("Assets/Background.jpg")
 BG = pygame.transform.scale(BG, (1920,1080))
-play_logo = pygame.transform.scale(pygame.image.load("Assets/logo.png"),((175*infoObject.current_w)/infoObject.current_w,65))
-options_logo = pygame.transform.scale(pygame.image.load("Assets/logo.png"),(175,65))
-quit_logo = pygame.transform.scale(pygame.image.load("Assets/logo.png"),(175,65))
-play_logo_pressed = pygame.transform.scale(pygame.image.load("Assets/logo_pressed.png"),(175,65))
-options_logo_pressed = pygame.transform.scale(pygame.image.load("Assets/logo_pressed.png"),(175,65))
-quit_logo_pressed = pygame.transform.scale(pygame.image.load("Assets/logo_pressed.png"),(175,65))
-renard_loading = pygame.transform.scale(pygame.image.load("Assets/Renard.png"),(50,41))
-logo_game = pygame.image.load("Logo_the fox fishing.png")
+logo = pygame.transform.scale(pygame.image.load("Assets/Start_Menu/logo.png"),((175*infoObject.current_w)/infoObject.current_w,65))
+
+logo_pressed = pygame.transform.scale(pygame.image.load("Assets/Start_Menu/logo_pressed.png"),(175,65))
+
+renard_loading = pygame.transform.scale(pygame.image.load("Assets/Start_Menu/Renard.png"),(50,41))
+logo_game = pygame.image.load("Assets/Main/Logo_the fox fishing.png")
+cursor = pygame.transform.scale(pygame.image.load("Assets/Main/cursor.png"),(50,50))
 
 background = bg_menu.Background()
 
@@ -73,6 +72,14 @@ def button_maker(x, y, longueur, largeur, couleur):
     bouton = pygame.Rect(x, y, longueur, largeur)
     pygame.draw.rect(ecran, couleur, bouton)
     return bouton'''
+
+def game():
+    for row in range(tilemap.mapheight):
+        for column in range(tilemap.mapwidth):
+            ecran.blit(tilemap.textures[tilemap.tilemap[row][column]], (column*tilemap.tilesize, row * tilemap.tilesize))
+    clock.tick(60)
+    pygame.display.update()
+
 
 class Button():
     def __init__(self,x,y,image):
@@ -137,15 +144,21 @@ def loading():
             pygame.quit()
             sys.exit()
 
+clock = pygame.time.Clock()
 
 def main_menu():
+
+
     width = 800
     i = 0
     j = 0
     k = 0
     count = 0
     nat_count = 0
+
     while True:
+          # update position
+
         ecran.fill((99, 155, 255))
 
         ecran.blit(background.sky_bg, (i, 0))
@@ -223,49 +236,51 @@ def main_menu():
         ecran.blit(background.boat[count], (150, 600))
         count += 1
 
-        play_button = Button(infoObject.current_w*(2/6),infoObject.current_h*(43/54),play_logo)
-        options_button = Button(infoObject.current_w*(3/6), infoObject.current_h*(43/54), options_logo)
-        quit_button = Button(infoObject.current_w*(4/6), infoObject.current_h*(43/54), quit_logo)
-        play_button_pressed = Button(infoObject.current_w*(2/6), infoObject.current_h*(43/54), play_logo_pressed)
-        options_button_pressed = Button(infoObject.current_w*(3/6), infoObject.current_h*(43/54), options_logo_pressed)
-        quit_button_pressed = Button(infoObject.current_w*(4/6), infoObject.current_h*(43/54), quit_logo_pressed)
+        play_button = Button(infoObject.current_w*(2/6),infoObject.current_h*(43/54),logo)
+        options_button = Button(infoObject.current_w*(3/6), infoObject.current_h*(43/54), logo)
+        quit_button = Button(infoObject.current_w*(4/6), infoObject.current_h*(43/54), logo)
+        play_button_pressed = Button(infoObject.current_w*(2/6), infoObject.current_h*(43/54), logo_pressed)
+        options_button_pressed = Button(infoObject.current_w*(3/6), infoObject.current_h*(43/54), logo_pressed)
+        quit_button_pressed = Button(infoObject.current_w*(4/6), infoObject.current_h*(43/54), logo_pressed)
 
 
-        if play_button.draw("   play"):
-            play_button_pressed.draw("   play")
-            loading()
-        if options_button.draw("  options"):
-            options_button_pressed.draw("  options")
+        if play_button.draw("   Play"):
+            play_button_pressed.draw("   Play")
+            
+            game()
+        if options_button.draw(" Options"):
+            options_button_pressed.draw(" Options")
             options()
-        if quit_button.draw("   quit"):
-            quit_button_pressed.draw("   quit")
+        if quit_button.draw("   Quit"):
+            quit_button_pressed.draw("   Quit")
             pygame.quit()
             sys.exit()
 
-        ecran.blit(logo_game, (infoObject.current_w * (2 / 5), infoObject.current_h * (1 / 2)))
+        ecran.blit(logo_game, (infoObject.current_w * (2 / 5), infoObject.current_h * (2.5 / 4)))
+
         '''draw_text('Crazy Extreme Fishing', taille, (70, 0, 150), ecran, (size[0]/2)-230, size[1]/8)
 
         sourisx, sourisy = pygame.mouse.get_pos()
 
-        b1 = button(ecran, ((size[0]/2)-70, size[1]/3), " Jouer ",play_logo)
+        b1 = button(ecran, ((size[0]/2)-70, size[1]/3), " Jouer ",logo)
 
-        b2 = button(ecran, ((size[0]/2)-70, size[1]/2), " Options ",options_logo)
+        b2 = button(ecran, ((size[0]/2)-70, size[1]/2), " Options ",logo)
 
-        b3 = button(ecran, ((size[0]/2)-70, size[1]/1.5), " Quitter ",quit_logo)
+        b3 = button(ecran, ((size[0]/2)-70, size[1]/1.5), " Quitter ",logo)
 
         if b1.collidepoint((sourisx, sourisy)):
-            b1 = button_press(ecran, ((size[0]/2)-70, size[1]/3), " Jouer ",play_logo_pressed)
+            b1 = button_press(ecran, ((size[0]/2)-70, size[1]/3), " Jouer ",logo_pressed)
             if clk:
                 pygame.quit()
                 sys.exit()
 
         if b2.collidepoint((sourisx, sourisy)):
-            b1 = button_press(ecran, ((size[0]/2)-70, size[1]/2), " Options ",options_logo_pressed)
+            b1 = button_press(ecran, ((size[0]/2)-70, size[1]/2), " Options ",logo_pressed)
             if clk:
                 options()
 
         if b3.collidepoint((sourisx, sourisy)):
-            b3 = button_press(ecran, ((size[0]/2)-70, size[1]/1.5), " Quitter ",quit_logo_pressed)
+            b3 = button_press(ecran, ((size[0]/2)-70, size[1]/1.5), " Quitter ",logo_pressed)
             if clk:
                 pygame.quit()
 '''
@@ -284,32 +299,32 @@ def main_menu():
                 if event.button == 1:
                     clk = True
 
+
         pygame.display.update()
-        ticker.tick(60)
+        ticker.tick(20)
+        clock.tick()
+        print(clock.get_fps())
 
 
-def game():
-    print("JOUER")
+
 
 def options():
 
     running = True
     while running:
-        pygame.draw.rect(ecran, (0, 0, 0), (infoObject.current_w*(1/8)-14, infoObject.current_h*(1/8)-14, infoObject.current_w*(3/4)+28, infoObject.current_h*(3/4)+28))
-        pygame.draw.rect(ecran, (255, 100, 0), (infoObject.current_w*(1/8)-10, infoObject.current_h*(1/8)-10, infoObject.current_w*(3/4)+20,infoObject.current_h*(3/4) +20))
-        pygame.draw.rect(ecran, (255, 125, 0), (infoObject.current_w*(1/8), infoObject.current_h*(1/8), infoObject.current_w*(3/4), infoObject.current_h*(3/4)))
+
+        ecran.fill((255,125,0))
         font = pygame.font.Font("Minecraft.ttf", 50)
         text = font.render("Options", 1, (255, 255, 255))
         textRect = text.get_rect()
-        textRect.center = (infoObject.current_w // 2, infoObject.current_h *(1/5))
+        textRect.center = (infoObject.current_w // 2, infoObject.current_h *(1/10))
 
         ecran.blit(text,textRect)
-        play_button1 = Button(infoObject.current_w * (2 / 6), infoObject.current_h * (43 / 54), play_logo)
-        play_button1_pressed = Button(infoObject.current_w * (2 / 6), infoObject.current_h * (43 / 54), play_logo_pressed)
+        play_button1 = Button(infoObject.current_w * (1 / 6), infoObject.current_h * (49 / 54), logo)
+        play_button1_pressed = Button(infoObject.current_w * (1 / 6), infoObject.current_h * (49 / 54), logo_pressed)
         if play_button1.draw("  Quitter"):
             play_button1_pressed.draw("  Quitter")
             running=False
-            time.sleep(0.1)
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -319,7 +334,7 @@ def options():
                     running = False
 
         pygame.display.update()
-        ticker.tick(60)
+        ticker.tick(20)
 
 
 main_menu()
