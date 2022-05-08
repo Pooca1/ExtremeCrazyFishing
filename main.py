@@ -1,14 +1,12 @@
 import pygame
 import sys
 import bg_menu
-import threading
-import time
 import random
 import math
 ticker = pygame.time.Clock()
 from pygame.locals import *
 from pygame import mixer
-import tilemap
+
 
 # pygame.display.set_mode((infoObject.current_w, infoObject.current_h))
 
